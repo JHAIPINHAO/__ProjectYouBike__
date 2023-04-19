@@ -3,7 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 from PIL import Image,ImageTk
 import datetime
-from tkinter.simpledialog import askinteger
+from tkinter.simpledialog import askinteger,askstring
 from messageWindow import MapDisplay
 
 
@@ -21,6 +21,10 @@ class Window(tk.Tk):
         self.command_menu.add_command(label="設定", command=self.menu_setting_click)
         self.command_menu.add_command(label="離開", command=self.destroy)
         self.menubar.add_cascade(label="File", menu=self.command_menu)
+        # add command menu in menubar
+        self.command_menu2 = tk.Menu(self.menubar,tearoff=0)
+        self.command_menu2.add_command(label="搜尋", command=self.menu_search_click)
+        self.menubar.add_cascade(label="Search", menu=self.command_menu2)
 
         
         # main Frame
@@ -170,7 +174,14 @@ class Window(tk.Tk):
         print(retVal)
         sbi_numbers = retVal
         bemp_numbers = retVal       
-
+    
+    def menu_search_click(self):
+        site_str = askstring("查詢的站點名","請輸入想查詢的地名關鍵字") 
+        for child in self.tree.get_children():
+            self.tree.delete(child)
+        for item in datasource.data_list:
+            if site_str in (item['sna']) or site_str in (item['ar']):
+                self.tree.insert('',tk.END,values=[item['sna'][11:],item['mday'],item['tot'],item['sbi'],item['bemp'],item['ar'],item['act']],tags=item['sna'])
 
     def radio_Event(self):
         #get current datetime
